@@ -1,0 +1,94 @@
+# {NombreProyecto} — Instrucciones para Agentes
+
+> Este archivo (y su copia `CLAUDE.md`) es lo PRIMERO que todo agente lee al entrar al repo.
+> Generado a partir de `knowledge-base/` y `CHANGES.md`. No editar a mano sin re-sincronizar ambos archivos.
+
+---
+
+## Stack Tecnológico
+
+<!-- Copiar la tabla de knowledge-base/02_descripcion_general.md §Stack tecnológico -->
+
+| Capa | Tecnología | Versión |
+|------|------------|---------|
+| Frontend | {React + TypeScript / Vite / Tailwind / Zustand / TanStack} | {x.x} |
+| Backend | {FastAPI / SQLModel / PostgreSQL / Alembic} | {x.x} |
+| Integraciones | {MercadoPago, ...} | — |
+
+Detalle completo: [knowledge-base/02_descripcion_general.md](knowledge-base/02_descripcion_general.md)
+
+---
+
+## Base de Conocimiento
+
+La fuente de verdad del dominio vive en `knowledge-base/`. **Leé el archivo relevante ANTES de implementar.**
+
+| Archivo | Cuándo leerlo |
+|---------|---------------|
+| [01_vision_y_objetivos.md](knowledge-base/01_vision_y_objetivos.md) | Entender propósito y alcance |
+| [03_actores_y_roles.md](knowledge-base/03_actores_y_roles.md) | Auth, RBAC, permisos |
+| [04_modelo_de_datos.md](knowledge-base/04_modelo_de_datos.md) | Entidades, ERD, migraciones |
+| [05_reglas_de_negocio.md](knowledge-base/05_reglas_de_negocio.md) | Reglas codificadas (RN-XX) |
+| [06_funcionalidades.md](knowledge-base/06_funcionalidades.md) | Historias de usuario por épica |
+| [07_flujos_principales.md](knowledge-base/07_flujos_principales.md) | Flujos E2E |
+| [08_arquitectura_propuesta.md](knowledge-base/08_arquitectura_propuesta.md) | Patrones, estructura, env vars |
+| [10_preguntas_abiertas.md](knowledge-base/10_preguntas_abiertas.md) | ⚠️ Inconsistencias a resolver ANTES de codear |
+
+> ⚠️ Resolver las preguntas de prioridad **Alta** de `10_preguntas_abiertas.md` antes de arrancar el primer change.
+
+---
+
+## Skills Disponibles
+
+<!-- Adaptar filas a las skills realmente presentes en .claude/skills/ y ~/.claude/skills/ -->
+
+| Agente | Rol | Skills que carga |
+|--------|-----|------------------|
+| **Backend Core** | FastAPI / SQLModel / UoW / migraciones | `fastapi-templates`, `python-testing-patterns`, `postgresql-table-design`, `test-driven-development` |
+| **Backend Aux** | Servicios, integraciones, seguridad | `api-security-best-practices`, `postgresql-optimization` |
+| **Frontend** | React / Zustand / TanStack / Tailwind | `typescript-advanced-types`, `tailwind-design-system`, `playwright-best-practices` |
+| **Orquestación** | SDD / OPSX / docs | `kb-creator`, `roadmap-generator`, `agents-md-generator`, `skill-creator` |
+
+Cargá la skill correspondiente al contexto ANTES de escribir código.
+
+---
+
+## Roadmap de Changes
+
+<!-- Resumen de CHANGES.md — NO duplicar el detalle completo -->
+
+El plan de implementación completo está en [CHANGES.md](CHANGES.md). Resumen:
+
+- **Total**: {N} changes en {M} fases.
+- **Camino crítico** ({K}): `{C-01 → C-02 → ... → C-NN}`.
+- **Primer change**: `C-01` ({nombre}).
+
+**Antes de cualquier `/opsx:propose`**: leé [CHANGES.md](CHANGES.md), identificá las dependencias del change y los archivos de "Leer antes".
+
+---
+
+## Reglas Duras (no negociables)
+
+Estas reglas son **contrato**. Romperlas es un defecto, no una decisión de estilo.
+
+1. **No buildear automático.** Nunca ejecutar build/compile/bundle sin pedido explícito del usuario.
+2. **No commitear sin pedido explícito.** `git add`/`commit`/`push` SOLO cuando el usuario lo pide. Si estás en la rama default, ramificá antes.
+3. **Conventional Commits sin `Co-Authored-By`.** Formato `tipo(scope): mensaje` (feat, fix, chore, refactor, test, docs). JAMÁS agregar atribución a IA ni `Co-Authored-By`.
+4. **Tests sin mocks de DB.** Usar base real o contenedor de test (testcontainers / DB efímera). Mockear la base de datos invalida el test — no prueba nada.
+5. **Pydantic schemas con `extra='forbid'`.** Todo schema rechaza campos no declarados (`model_config = ConfigDict(extra='forbid')`).
+6. **snake_case en Python.** Funciones, variables, columnas de BD, módulos y paquetes.
+7. **PascalCase en componentes React.** Nombre del componente y del archivo (`ProductCard.tsx`).
+
+---
+
+## Flujo de Trabajo
+
+```
+1. Leer la KB relevante (knowledge-base/)        → entender el dominio
+2. Identificar el change en CHANGES.md           → respetar dependencias
+3. /opsx:propose C-NN-nombre                     → proposal + design + specs + tasks
+4. Implementar las tasks (cargando skills)       → respetando las reglas duras
+5. /opsx:archive C-NN-nombre + marcar [x]        → cerrar el change
+```
+
+Aplicar TODAS las reglas duras en cada paso. Ante conflicto entre la KB y este archivo, las reglas duras prevalecen.
