@@ -69,17 +69,18 @@ El plan de implementación completo está en [CHANGES.md](CHANGES.md). Resumen:
 
 ---
 
-## Reglas Duras (no negociables)
+## Reglas Duras
 
-Estas reglas son **contrato**. Romperlas es un defecto, no una decisión de estilo.
+> Reglas **globales** ya definidas en `~/.claude/CLAUDE.md` (orquestador, governance, TDD, engram): el proyecto las **hereda**, no se repiten acá.
 
-1. **No buildear automático.** Nunca ejecutar build/compile/bundle sin pedido explícito del usuario.
-2. **No commitear sin pedido explícito.** `git add`/`commit`/`push` SOLO cuando el usuario lo pide. Si estás en la rama default, ramificá antes.
-3. **Conventional Commits sin `Co-Authored-By`.** Formato `tipo(scope): mensaje` (feat, fix, chore, refactor, test, docs). JAMÁS agregar atribución a IA ni `Co-Authored-By`.
-4. **Tests sin mocks de DB.** Usar base real o contenedor de test (testcontainers / DB efímera). Mockear la base de datos invalida el test — no prueba nada.
-5. **Pydantic schemas con `extra='forbid'`.** Todo schema rechaza campos no declarados (`model_config = ConfigDict(extra='forbid')`).
-6. **snake_case en Python.** Funciones, variables, columnas de BD, módulos y paquetes.
-7. **PascalCase en componentes React.** Nombre del componente y del archivo (`ProductCard.tsx`).
+Acá van: (a) las reglas específicas de este proyecto, derivadas de su stack ({stack}) y **confirmadas con el usuario**; y (b) cualquier regla universal que el global NO cubra todavía (ej. no buildear/commitear sin pedido, conventional commits sin co-autoría IA — incluir SOLO si no están en el global). Son contrato; romperlas es un defecto. Formato `NUNCA X → hacer Y`:
+
+<!-- Reemplazar con las reglas confirmadas en el Paso 3 de la skill. Ejemplos por stack — NO copiar a ciegas: -->
+<!-- Go:        NUNCA mergear sin `gofmt`/`go vet` limpios → correrlos antes de cada commit. -->
+<!-- Python:    NUNCA schema Pydantic sin `extra='forbid'` → rechazar campos no declarados. -->
+<!-- React/TS:  NUNCA usar `any` → tipar estricto; componentes en PascalCase. -->
+
+- {Reglas confirmadas del proyecto. Si el usuario no agregó ninguna específica, dejá solo la línea de referencia al global de arriba — es válido.}
 
 ---
 
