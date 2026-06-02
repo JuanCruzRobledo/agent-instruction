@@ -42,7 +42,7 @@ Generá **`AGENTS.md` en la raíz** y un **`CLAUDE.md` en la raíz** con el mism
 1. `knowledge-base/02_descripcion_general.md` → stack tecnológico (copiá la tabla).
 2. `knowledge-base/README.md` → nombre del proyecto + resumen ejecutivo.
 3. `CHANGES.md` → camino crítico, fases y primer change (resumen, NO el detalle completo).
-4. `.claude/skills/` (proyecto) y `~/.claude/skills/` (usuario) → skills disponibles, agrupadas por rol de agente.
+4. `.atl/skill-registry.md` (si existe) → **fuente de verdad de las skills disponibles** (nombres + triggers + paths). Es lo que genera `skill-registry`; leelo de ahí, no re-escanees. *Fallback* si no existe: escaneá `.claude/skills/` + `~/.claude/skills/`. En ambos casos, agrupá las skills por rol de agente.
 5. `knowledge-base/10_preguntas_abiertas.md` → flag de inconsistencias Alta a resolver antes de codear.
 
 ### Las 7 reglas duras (SIEMPRE presentes, textual)
@@ -70,6 +70,10 @@ Mapeá las skills detectadas a los roles de agente del proyecto. Estructura suge
 
 Adaptá las filas a las skills realmente presentes en el repo. No inventes skills que no existen.
 
+**DRY — no copies los compact rules acá.** El `AGENTS.md`/`CLAUDE.md` solo mapea skill→rol (decisión de arquitectura, versionada). Los compact rules de cada skill viven SOLO en `.atl/skill-registry.md` (no versionado); el orquestador los resuelve en runtime. Debajo de la tabla, agregá esta línea textual de referencia:
+
+> Los compact rules de cada skill los resuelve el orquestador desde `.atl/skill-registry.md` (generado por `skill-registry`; no versionado — no está en el repo).
+
 ## Code Examples
 
 Ver la plantilla completa en [assets/agents-template.md](assets/agents-template.md). Estructura de primer nivel (no quitar secciones):
@@ -78,7 +82,7 @@ Ver la plantilla completa en [assets/agents-template.md](assets/agents-template.
 # {Proyecto} — Instrucciones para Agentes
 ## Stack Tecnológico        → tabla desde KB 02
 ## Base de Conocimiento     → links a knowledge-base/*.md
-## Skills Disponibles       → tabla por agente
+## Skills Disponibles       → tabla skill→rol (desde el registry) + línea de referencia a `.atl/skill-registry.md` para los compact rules
 ## Roadmap de Changes       → resumen de CHANGES.md + primer change
 ## Reglas Duras (no negociables)  → las 7 reglas, textual
 ## Flujo de Trabajo         → KB → CHANGES → /opsx:propose → archive
@@ -87,8 +91,8 @@ Ver la plantilla completa en [assets/agents-template.md](assets/agents-template.
 ## Commands
 
 ```bash
-# Detectar skills del proyecto y del usuario
-ls .claude/skills/ ~/.claude/skills/
+# Fuente de verdad de skills: el registry (si existe). Fallback: escaneo directo.
+test -f .atl/skill-registry.md && cat .atl/skill-registry.md || ls .claude/skills/ ~/.claude/skills/
 
 # Verificar pre-checks
 ls knowledge-base/ CHANGES.md

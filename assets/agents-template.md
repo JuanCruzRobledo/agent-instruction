@@ -40,7 +40,7 @@ La fuente de verdad del dominio vive en `knowledge-base/`. **Leé el archivo rel
 
 ## Skills Disponibles
 
-<!-- Adaptar filas a las skills realmente presentes en .claude/skills/ y ~/.claude/skills/ -->
+<!-- Fuente de verdad: .atl/skill-registry.md (generado por skill-registry). Adaptar filas a las skills que lista el registry; fallback a .claude/skills/ y ~/.claude/skills/ si no existe. -->
 
 | Agente | Rol | Skills que carga |
 |--------|-----|------------------|
@@ -50,6 +50,8 @@ La fuente de verdad del dominio vive en `knowledge-base/`. **Leé el archivo rel
 | **Orquestación** | SDD / OPSX / docs | `kb-creator`, `roadmap-generator`, `agents-md-generator`, `skill-creator` |
 
 Cargá la skill correspondiente al contexto ANTES de escribir código.
+
+> Los compact rules de cada skill los resuelve el orquestador desde `.atl/skill-registry.md` (generado por `skill-registry`; no versionado — no está en el repo). Esta tabla solo mapea skill→rol.
 
 ---
 
