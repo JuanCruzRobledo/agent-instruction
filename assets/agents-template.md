@@ -40,14 +40,14 @@ La fuente de verdad del dominio vive en `knowledge-base/`. **Leé el archivo rel
 
 ## Skills Disponibles
 
-<!-- Fuente de verdad: .atl/skill-registry.md (generado por skill-registry). Adaptar filas a las skills que lista el registry; fallback a .claude/skills/ y ~/.claude/skills/ si no existe. -->
+<!-- Fuente de verdad: .atl/skill-registry.md (generado por skill-registry). Adaptar filas a las skills que lista el registry; fallback al inventario de skills del cliente activo si no existe. -->
 
 | Agente | Rol | Skills que carga |
 |--------|-----|------------------|
 | **Backend Core** | FastAPI / SQLModel / UoW / migraciones | `fastapi-templates`, `python-testing-patterns`, `postgresql-table-design`, `test-driven-development` |
 | **Backend Aux** | Servicios, integraciones, seguridad | `api-security-best-practices`, `postgresql-optimization` |
 | **Frontend** | React / Zustand / TanStack / Tailwind | `typescript-advanced-types`, `tailwind-design-system`, `playwright-best-practices` |
-| **Orquestación** | SDD / OPSX / docs | `kb-creator`, `roadmap-generator`, `agents-md-generator`, `skill-creator` |
+| **Orquestación** | SDD / OPSX / docs | `kb-creator`, `roadmap-generator`, `agent-instruction`, `skill-creator` |
 
 Cargá la skill correspondiente al contexto ANTES de escribir código.
 
@@ -65,13 +65,13 @@ El plan de implementación completo está en [CHANGES.md](CHANGES.md). Resumen:
 - **Camino crítico** ({K}): `{C-01 → C-02 → ... → C-NN}`.
 - **Primer change**: `C-01` ({nombre}).
 
-**Antes de cualquier `/opsx:propose`**: leé [CHANGES.md](CHANGES.md), identificá las dependencias del change y los archivos de "Leer antes".
+**Antes de cualquier `skill de propuesta instalada`**: leé [CHANGES.md](CHANGES.md), identificá las dependencias del change y los archivos de "Leer antes".
 
 ---
 
 ## Reglas Duras
 
-> Reglas **globales** ya definidas en `~/.claude/CLAUDE.md` (orquestador, governance, TDD, engram): el proyecto las **hereda**, no se repiten acá.
+> Reglas **globales** ya definidas en el archivo global de instrucciones que carga el cliente activo (orquestador, governance, TDD, engram): el proyecto las **hereda**, no se repiten acá.
 
 Acá van: (a) las reglas específicas de este proyecto, derivadas de su stack ({stack}) y **confirmadas con el usuario**; y (b) cualquier regla universal que el global NO cubra todavía (ej. no buildear/commitear sin pedido, conventional commits sin co-autoría IA — incluir SOLO si no están en el global). Son contrato; romperlas es un defecto. Formato `NUNCA X → hacer Y`:
 
@@ -89,7 +89,7 @@ Acá van: (a) las reglas específicas de este proyecto, derivadas de su stack ({
 ```
 1. Leer la KB relevante (knowledge-base/)        → entender el dominio
 2. Identificar el change en CHANGES.md           → respetar dependencias
-3. /opsx:propose C-NN-nombre                     → proposal + design + specs + tasks
+3. skill de propuesta instalada C-NN-nombre                     → proposal + design + specs + tasks
 4. Implementar las tasks (cargando skills)       → respetando las reglas duras
 5. /opsx:archive C-NN-nombre + marcar [x]        → cerrar el change
 ```

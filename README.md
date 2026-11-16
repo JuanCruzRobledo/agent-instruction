@@ -1,4 +1,4 @@
-# agents-md-generator
+# agent-instruction
 
 Skill que genera el `AGENTS.md` / `CLAUDE.md` canónico de un proyecto a partir de su base de conocimiento (`knowledge-base/`) y su roadmap (`CHANGES.md`).
 
@@ -48,7 +48,7 @@ agent-instruction/
 
 ## Skills relacionadas
 
-Parte de una trilogía que se encadena: `kb-creator` (documenta) → `roadmap-generator` (planifica) → `agents-md-generator` (instruye).
+Parte de una trilogía que se encadena: `kb-creator` (documenta) → `roadmap-generator` (planifica) → `agent-instruction` (instruye).
 
 ## Licencia
 
