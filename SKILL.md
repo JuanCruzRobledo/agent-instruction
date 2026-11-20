@@ -11,7 +11,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: gentleman-programming
-  version: "1.0"
+  version: "1.1"
 ---
 
 ## When to Use
@@ -44,6 +44,18 @@ Para la fase `agents` orquestada, usá la variante y las rutas de instrucciones 
 - `update`: proponé un bloque de instrucciones de proyecto y mostrá el diff para aprobación. Si hay rutas faltantes y existentes, mostrá en el mismo diff las creaciones y las actualizaciones. Usá un snapshot de cada destino existente antes de escribir. Si el snapshot falla o un destino cambió desde que se aprobó el diff, detené la actualización.
 
 Para archivos preexistentes insertá o reemplazá únicamente un bloque delimitado por `<!-- active-stack:agent-instruction -->` y `<!-- /active-stack:agent-instruction -->` en líneas propias. Conservá el contenido alrededor y dejá intactos los bloques administrados por otros arneses. Marcadores incompletos o repetidos son un conflicto y requieren revisión. En `generate`, incluí los mismos marcadores para que actualizaciones posteriores sean idempotentes.
+
+### Reglas de equipo
+
+Sección opcional, solo con equipo confirmado: el orquestador (fase `team-mode`) pasa la confirmación del equipo en el plan; sin esa confirmación esta sección no existe. Sin equipo confirmado la salida es idéntica a la de la versión anterior: ni una línea cambia. No inventes nombres ni integrantes: esta sección no lleva nombres, cuentas ni IDs.
+
+Escribila en el archivo de instrucciones del proyecto (`AGENTS.md` o `CLAUDE.md` según las rutas del plan confirmado), nunca en el global del cliente: quien trabaja solo o en otro proyecto no paga ese contexto.
+
+- Contenido: copiá el bloque de [assets/team-rules-template.md](assets/team-rules-template.md) tal cual. Es corto a propósito y apunta a la skill `active-delivery` para el detalle; incluye el fallback manual para clientes donde esa skill no existe.
+- Delimitá la sección con `<!-- active-stack:team-mode -->` y `<!-- /active-stack:team-mode -->` en líneas propias, distinta del bloque `active-stack:agent-instruction`. Insertá o reemplazá únicamente ese bloque: reemplazá la sección existente en lugar de agregar otra, de modo que quede una sola vez.
+- Idempotencia: repetir la operación con el mismo equipo no cambia ningún byte. No dupliques el contenido que ya aporta otra sección ni repitas reglas de otros bloques.
+- Conservá el contenido alrededor y dejá intactos los bloques administrados por otros arneses. Marcadores incompletos o repetidos son un conflicto y requieren revisión.
+- En `update` mostrá el diff para aprobación y usá un snapshot de cada destino existente antes de escribir, igual que con el bloque del proyecto.
 
 ### Enlaces a artefactos del proyecto
 
@@ -148,3 +160,4 @@ diff AGENTS.md CLAUDE.md && echo "OK: sincronizados"
 ## Resources
 
 - **Templates**: ver [assets/agents-template.md](assets/agents-template.md) — plantilla completa de `AGENTS.md`: referencia al global + reglas específicas del proyecto (stack-aware) y todas las secciones de contrato.
+- **Reglas de equipo**: ver [assets/team-rules-template.md](assets/team-rules-template.md) — bloque corto con markers `active-stack:team-mode`, solo con equipo confirmado.
