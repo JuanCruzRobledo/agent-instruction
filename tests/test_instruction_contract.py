@@ -94,5 +94,61 @@ class TeamRulesTests(unittest.TestCase):
         self.assertRegex(section, r"(?i)nunca en el global")
 
 
+# Fragmento que el stack instala en el archivo GLOBAL del cliente (harness
+# `engram-cloud`). Son marcas y frases propias de esa sección: si alguna aparece
+# en lo que genera esta skill, la sección quedaría duplicada.
+GLOBAL_ENGRAM_CLOUD = (
+    "<!-- active-stack:engram-cloud -->",
+    "<!-- /active-stack:engram-cloud -->",
+    "## Cloud Team Memory",
+    '"memory_policy": "cloud-branch"',
+    "branch/<current slug>",
+    "engram sync --all",
+    "Closing a unit of work",
+)
+ENGRAM_HEADING = r"(?ms)^### No duplicar Engram Cloud\n(.*?)(?=^#{2,3} |\Z)"
+
+
+def engram_cloud_section():
+    match = re.search(ENGRAM_HEADING, SKILL)
+    return re.sub(r"\s+", " ", match.group(1)) if match else ""
+
+
+class EngramCloudNotDuplicatedTests(unittest.TestCase):
+    def test_output_lacks_the_global_engram_cloud_fragment(self):
+        # Lo que la skill emite al proyecto es el bloque `agent-instruction`
+        # (plantilla) y el bloque de equipo: ninguno contiene el fragmento global.
+        emitted = {"agents-template.md": TEMPLATE, "team-rules-template.md": TEAM}
+        for name, text in emitted.items():
+            for trace in GLOBAL_ENGRAM_CLOUD:
+                with self.subTest(file=name, trace=trace):
+                    self.assertNotIn(trace, text)
+
+    def test_skill_never_carries_the_fragment_as_content_to_write(self):
+        # SKILL.md puede nombrar el marcador solo dentro de la sección que prohíbe
+        # copiarlo; fuera de ella no aparece ninguna parte del fragmento.
+        outside = re.sub(ENGRAM_HEADING, "", SKILL)
+        for trace in ("## Cloud Team Memory", "branch/<current slug>", "engram sync --all",
+                      "active-stack:engram-cloud"):
+            with self.subTest(trace=trace):
+                self.assertNotIn(trace, outside)
+
+    def test_skill_declares_the_rule_and_how_to_detect_the_global_section(self):
+        section = engram_cloud_section()
+        self.assertTrue(section, "falta la sección «No duplicar Engram Cloud»")
+        self.assertIn("active-stack:engram-cloud", section)
+        self.assertRegex(section, r"(?i)archivo global de instrucciones del cliente activo")
+        self.assertRegex(section, r"(?i)no la copies")
+        self.assertIn(".engram/active-stack.json", section)
+
+    def test_skill_never_touches_a_block_owned_by_the_engram_cloud_harness(self):
+        section = engram_cloud_section()
+        self.assertRegex(section, r"(?i)bloque administrado por otro arn[eé]s")
+        self.assertRegex(section, r"(?i)no lo edites")
+
+    def test_project_without_the_feature_gets_an_identical_output(self):
+        self.assertRegex(engram_cloud_section(), r"(?i)sin esa secci[oó]n.*id[eé]ntic")
+
+
 if __name__ == "__main__":
     unittest.main()

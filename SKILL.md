@@ -11,7 +11,7 @@ description: >
 license: Apache-2.0
 metadata:
   author: gentleman-programming
-  version: "1.1"
+  version: "1.2"
 ---
 
 ## When to Use
@@ -56,6 +56,15 @@ Escribila en el archivo de instrucciones del proyecto (`AGENTS.md` o `CLAUDE.md`
 - Idempotencia: repetir la operación con el mismo equipo no cambia ningún byte. No dupliques el contenido que ya aporta otra sección ni repitas reglas de otros bloques.
 - Conservá el contenido alrededor y dejá intactos los bloques administrados por otros arneses. Marcadores incompletos o repetidos son un conflicto y requieren revisión.
 - En `update` mostrá el diff para aprobación y usá un snapshot de cada destino existente antes de escribir, igual que con el bloque del proyecto.
+
+### No duplicar Engram Cloud
+
+El harness `engram-cloud` instala por su cuenta, en el archivo global de instrucciones del cliente activo, la sección delimitada por `<!-- active-stack:engram-cloud -->` y `<!-- /active-stack:engram-cloud -->` (memoria de equipo por rama). Esa sección es del global: no la copies, no la resumas ni la parafrasees en el archivo del proyecto, ni agregues reglas de etiquetado, de promoción o de `branch/` para la memoria.
+
+- Aunque el proyecto use la política `cloud-branch` (marcador `.engram/active-stack.json`), el archivo del proyecto no la menciona más allá de lo que ya trae el global: el marcador y el comando `active-stack memory init` pertenecen a la fundación, no a esta skill.
+- Si al leer el global (paso 1 de las reglas duras) la sección está presente, tratala como una regla universal ya cubierta y heredada. Si no está, tampoco la escribas: no es tu responsabilidad ni se lleva al proyecto.
+- Si un archivo de proyecto preexistente ya contiene ese bloque, es un bloque administrado por otro arnés: no lo edites, no lo quites, no lo muevas, y no lo reemplaces al actualizar el bloque `agent-instruction`.
+- Sin esa sección en el global ni en el proyecto, la salida es idéntica a la de la versión anterior: ni una línea cambia.
 
 ### Enlaces a artefactos del proyecto
 
@@ -160,4 +169,5 @@ diff AGENTS.md CLAUDE.md && echo "OK: sincronizados"
 ## Resources
 
 - **Templates**: ver [assets/agents-template.md](assets/agents-template.md) — plantilla completa de `AGENTS.md`: referencia al global + reglas específicas del proyecto (stack-aware) y todas las secciones de contrato.
+- **No duplicar Engram Cloud**: sección «No duplicar Engram Cloud» de este `SKILL.md`; la sección de Engram Cloud vive solo en el global.
 - **Reglas de equipo**: ver [assets/team-rules-template.md](assets/team-rules-template.md) — bloque corto con markers `active-stack:team-mode`, solo con equipo confirmado.
